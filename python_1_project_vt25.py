@@ -1,12 +1,9 @@
 
-
 from email.policy import default
 
 
 Hp = 5
-#Nycklar = 0
-#Hammare = 0
-room=1
+room = 1
 lastRoom = 1
 Svard = 0
 Inventory = []
@@ -21,10 +18,52 @@ Inventory = []
 #import tkinter as tk
 
 
-def rum_1():
-    print("Valkommen, du ar i rum_1 ") 
-def rum_2():
-    print("Valkommen, du ar i rum_2 ")
+def roomDialog(parRoom, roomName, roomFwd = 0, roomRight = 0, roomLeft = 0):
+    print("You are now in room " + roomName)  
+    print("These are your options here: ")
+    if roomFwd != 0:
+       print(f"{'forward (w)': >42}")
+    if roomLeft != 0:
+       print(f"{'left (a)': >42}")
+    if roomRight != 0:
+        print(f"{'right (d)': >42}")
+    if roomName != "room 1":
+        print(f"{'back (s)': >42}")
+    print(f"{'inventory (i)': >42}")
+    global room
+    global lastRoom
+    usrInput=input("Where do you want to go? ")
+    match usrInput:
+        case "a":
+            if roomLeft != 0:
+                lastRoom = parRoom
+                room = roomLeft
+            else: 
+                print("You didn't reed? Did you?")
+        case "w":
+            if roomFwd != 0:
+                lastRoom = parRoom
+                room = roomFwd
+            else: 
+                print("You didn't reed? Did you?")
+        case "d":
+            if roomRight != 0:
+                lastRoom = parRoom
+                room = roomRight
+            else: 
+                print("You didn't reed? Did you?")
+        case "s": # going back
+            tmp_room = parRoom #save current room in tmp variable
+            room = lastRoom 
+            lastRoom = tmp_room
+        case "i":
+            print(Inventory)
+        case _:
+            print("The command does not exist, try again ")
+    return
+
+
+
 
 
 
@@ -34,110 +73,27 @@ print("Welcome! You are stuck in a abondend house. Your goal is to collect mater
 print("To walk you use the commands:    W - Forward, A - left, D - right, S - backwards")
 while 1:
     if room == 1:
-        rum_1()
-        usrInput=input("Where do you want to go? (forward) ")
-        match usrInput:
-            case "w":
-                lastRoom = room
-                room = 2
-            case _:
-                print("The command does not exist, try again ")
+        roomDialog(room, roomName = "room 1", roomFwd = 2)
     if room == 2: 
-        rum_2()
-        usrInput=input("Where do you want to go? (Left, right, forward, back) ")
-        match usrInput:
-            case "a":
-                lastRoom = room
-                room = 4
-            case "w":
-                lastRoom = room
-                room = 6
-            case "d":
-                lastRoom = room
-                room = 3
-            case "s": # going back
-                tmp_room = room #save current room in tmp variable
-                room = lastRoom 
-                lastRoom = tmp_room
-            case "i":
-                print(Inventory)
-            case _:
-                print("The command does not exist, try again ")
+        roomDialog(room, roomName = "Kitchen", roomFwd = 6, roomRight = 3, roomLeft = 4)
+       
     if room == 3: 
-         print("You are in room 3")
-         print("You have found a paper behind the door. It seems like it's a riddle!? You take up the paper and read the riddle")
-         print("The first digit is the number of weeks in two months.")
-         print("The second digit is the number of months that have 28 days.")
-         print("The third digit is the number of sides on a rectangle minus the number of sides on a triangle.")
-         print("The fourth digit is the number of continents that start with the letter A.")
-         print("What is the code? You could maybe need it in the future")
-
-         usrInput=input("Where do you want to go? (left or back) ")
-         match usrInput:
-             case "a":
-                 lastRoom = room
-                 room = 5
-             case "s": # going back
-                tmp_room = room #save current room in tmp variable
-                room = lastRoom 
-                lastRoom = tmp_room
-             case "i":
-                print(Inventory)
-             case _:
-                print("The command does not exist, try again ")
+        print("You are in room 3")
+        print("You have found a paper behind the door. It seems like it's a riddle!? You take up the paper and read the riddle")
+        print("The first digit is the number of weeks in two months.")
+        print("The second digit is the number of months that have 28 days.")
+        print("The third digit is the number of sides on a rectangle minus the number of sides on a triangle.")
+        print("The fourth digit is the number of continents that start with the letter A.")
+        print("What is the code? You could maybe need it in the future")
+        roomDialog(room, roomName = "3, the livingroom", roomLeft = 5) 
     if room == 4:
-        print("You are in room 4")
-        usrInput=input("Where do you want to go? (right or back) ")
-        match usrInput: 
-            case "d":
-                lastRoom = room
-                room = 7
-            case "s": # going back
-                tmp_room = room #save current room in tmp variable
-                room = lastRoom 
-                lastRoom = tmp_room
-            case "i":
-                print(Inventory)
-            case _:
-                print("The command does not exist, try again ")
+        roomDialog(room, roomName = "4", roomRight = 7)
     if room == 5:
-        print("You are in room 5") # the basement
-        usrInput=input("Where do you want to go? (back) ")
-        match usrInput: 
-            case "s": # going back
-                tmp_room = room #save current room in tmp variable
-                room = lastRoom 
-                lastRoom = tmp_room
-            case _:
-                print("The command does not exist, try again ")
+        roomDialog(room, roomName = "5, the basement")
     if room == 6:
-        print("You are in room 6")
-        usrInput=input("Where do you want to go? (left or back) ")
-        match usrInput: 
-            case "a":
-                lastRoom = room
-                room = 7
-            case "s": # going back
-                tmp_room = room #save current room in tmp variable
-                room = lastRoom 
-                lastRoom = tmp_room
-            case "i":
-                print(Inventory)
-            case _:
-                print("The command does not exist, try again ")
+        roomDialog(room, roomName = "6", roomLeft = 7)      
     if room == 7:
-        print("You are in room 7, the final room")
-        usrInput=input("Where do you want to go? ( or back) ")
-        match usrInput: 
-            case "d":
-                lastRoom = room
-                room = 7
-            case "s": # going back
-                tmp_room = room #save current room in tmp variable
-                room = lastRoom 
-                lastRoom = tmp_room
-            case "i":
-                print(Inventory)
-            case _:
-                print("The command does not exist, try again ")
-                
+        roomDialog(room, roomName = "7, the final room", roomRight = 7)
+
+        #rum 4
+        # d p om till riktningar - v derstr ck
