@@ -1,101 +1,58 @@
 
-from email.policy import default
 from room import Room
 
-Hp = 5
-room = 1
-lastRoom = 1
-Svard = 0
-Inventory = []
 
-#def when_clicked("e"):
-#    print(Inventory)
+inventory = []
 
-#import keyboard
-#    while True:
-#       if keyboard.read_key() == "p":
-#            print("You pressed p")
-#import tkinter as tk
-
-
-
-
-
-'''
-    usrInput=input("Where do you want to go? ")
-    match usrInput:
-        case "a":
-            if roomEast != 0:
-                lastRoom = parRoom
-                room = roomEast
-            else: 
-                print("You didn't read? Did you?")
-        case "w":
-            if roomSouth != 0:
-                lastRoom = parRoom
-                room = roomSouth
-            else: 
-                print("You didn't read? Did you?")
-        case "d":
-            if roomWest != 0:
-                lastRoom = parRoom
-                room = roomWest
-            else: 
-                print("You didn't read? Did you?")
-        case "s": # going back
-            tmp_room = parRoom #save current room in tmp variable
-            room = lastRoom 
-            lastRoom = tmp_room
-        case "i":
-            print(Inventory)
-        case _:
-            print("The command does not exist, try again ")
-    return
-
-    '''
-def intro():
-    print("Your goal is to collect material in the different rooms to fight the giant that is blocking the door so you can't escape. Good luck!")
-    print("To walk you use the commands:    W - South, A - East, D - West, S - back") 
-def pantry():
-    print("Woah! You have just woken up. The room you're in is dark.")
-    print("You try to get out but the door is locked, so you feel around in the room trying to find something heavy to smash the door.") 
-    print("You are lucky this time, the room seems to have a lot of food and kitchen ware so you can quickly find a mortal to smash the door") 
-
-r0 = Room(id = 0, name = "Pantry", nxt_north = 1)
-r1 = Room(id = 1, name = "Living room", nxt_north = 6, nxt_south = 0, nxt_east=2, nxt_west=3)
-
-rooms = (r0, r1)
+ 
+r0 = Room(name = "Pantry", room_id_n = 1)
+r1 = Room(name = "Kitchen", room_id_n = 5, room_id_s = 0, room_id_e=2, room_id_w=3)
+r2 = Room(name = "Bedroom", room_id_n = 4, room_id_w = 1)
+r3 = Room(name = "Main Living room", room_id_n = 6, room_id_w = 1)
+r4 = Room(name = "Basement", room_id_s = 2)
+r5 = Room(name = "Second Living room", room_id_e = 6, room_id_s = 1)
+r6 = Room(name = "Hallway", room_id_w = 5, room_id_s = 3)
+rooms = (r0, r1, r2, r3, r4, r5, r6)
 
 current_room = rooms[0]
 last_room = current_room
-intro()
-pantry()
+
+
+
+
+print("Your goal is to collect material in the different rooms to fight the giant that is blocking the door so you can't escape. Good luck!")
+print("To walk you use the commands:    W - South, A - East, D - West, S - back") 
+
+print("Woah! You have just woken up. The room you're in is dark.")
+print("You try to get out but the door is locked, so you feel around in the room trying to find something heavy to smash the door.") 
+print("You are lucky this time, the room seems to have a lot of food and kitchen ware so you can quickly find a mortal to smash the door") 
+
 
 while 1:   
-    usrInput=input(current_room.dialog())
+    usrInput=input(current_room.generate_input_str(rooms))
     match usrInput:
         case "a":
-            if current_room.nxt_west  != -1:
+            if current_room.room_id_w  != -1:
                 last_room = current_room
-                current_room = rooms[current_room.nxt_west]
+                current_room = rooms[current_room.room_id_w]
             else: 
                 print("You didn't read? Did you?")
         case "w":
-            if current_room.nxt_north  != -1:
+            if current_room.room_id_n  != -1:
                 last_room = current_room
-                current_room = rooms[current_room.nxt_north]
+                current_room = rooms[current_room.room_id_n]
             else: 
                 print("You didn't read? Did you?")
         case "d":
-            if current_room.nxt_east  != -1:
+            if current_room.room_id_e  != -1:
                 last_room = current_room
-                current_room = rooms[current_room.nxt_east]
+                current_room = rooms[current_room.room_id_e]
             else: 
                 print("You didn't read? Did you?")
         case "s":
-            if current_room.nxt_south  != -1:
+            if current_room.room_id_s  != -1:
                 last_room = current_room
-                current_room = rooms[current_room.nxt_south]
+                current_room = rooms[current_room.room_id_s]
             else: 
                 print("You didn't read? Did you?")
         case "z": # going back
@@ -104,6 +61,8 @@ while 1:
             last_room = current_room
         case "i":
             print(Inventory)
+        case "p":
+            exit()
         case _:
             print("The command does not exist, try again ")
 
