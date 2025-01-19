@@ -4,6 +4,10 @@ from room import Room
 
 inventory = []
 
+def print_file(fn):
+    f= open(fn,'r')
+    print(''.join([line for line in f]))
+
  
 r0 = Room(name = "Pantry", room_id_n = 1)
 r1 = Room(name = "Kitchen", room_id_n = 5, room_id_s = 0, room_id_e=2, room_id_w=3)
@@ -17,7 +21,7 @@ rooms = (r0, r1, r2, r3, r4, r5, r6)
 current_room = rooms[0]
 last_room = current_room
 
-
+print_file('banner.txt')
 
 
 print("Your goal is to collect material in the different rooms to fight the giant that is blocking the door so you can't escape. Good luck!")
