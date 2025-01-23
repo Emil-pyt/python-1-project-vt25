@@ -1,5 +1,6 @@
 
 #Todo: validate id and name
+# comment methods and functions
 class Room:
     num_instances = 0
 
@@ -14,22 +15,35 @@ class Room:
         self.room_txt = room_txt 
         self.item = item
         self.riddle = riddle
+        self.item_list = []
 
+    def add_item_list(self, item_name):
+        self.item_list.append(item_name)
+        
+        
+    
     def generate_input_str(self, rooms_tuple):
 
-        str = "You are now in the " + "\033[1;36;40m" + self.name + "\033[0m" + "\n"  #name of room in bright green
-        str = str + "These are your options here: " + "\n"
+        print_str = "You are now in the " + "\033[1;36;40m" + self.name + "\033[0m" + "\n"  #name of room in bright green
+        if len(self.item_list) != 0:
+            print_str = print_str + "Press a number of wich item you want to pick up: \n" #print all items if any            
+            item_str = ""
+            for index, item in enumerate(self.item_list):
+                item_str = item_str + str(index) +". "+ str(item) + " "
+            print_str = print_str + item_str + "\n"   
+            #str = str + ', '.join(self.item_list) + "\n"
+        print_str = print_str + "These are your options here: " + "\n"   
         if self.room_id_n != -1:
-            str = str + (f"{' ': <30}{'w -> ' + rooms_tuple[self.room_id_n].name: <40}") + "\n"
+            print_str = print_str + (f"{' ': <30}{"\033[1;32;40m" + 'w' "\033[0m" +" -> " + rooms_tuple[self.room_id_n].name: <40}") + "\n" #prints the button cmds and highlights the key green
         if self.room_id_s != -1:
-            str = str + (f"{' ': <30}{'s -> ' + rooms_tuple[self.room_id_s].name: <40}") + "\n"
+            print_str = print_str + (f"{' ': <30}{"\033[1;32;40m" + 's' "\033[0m" +" -> " + rooms_tuple[self.room_id_s].name: <40}") + "\n"
         if self.room_id_e != -1:
-            str = str + (f"{' ': <30}{'d -> ' + rooms_tuple[self.room_id_e].name: <40}") + "\n"
+            print_str = print_str + (f"{' ': <30}{"\033[1;32;40m" + 'd' "\033[0m" +" -> " + rooms_tuple[self.room_id_e].name: <40}") + "\n"
         if self.room_id_w != -1:
-            str = str + (f"{' ': <30}{'a -> ' + rooms_tuple[self.room_id_w].name: <40}") + "\n"
+            print_str = print_str + (f"{' ': <30}{"\033[1;32;40m" + 'a ' "\033[0m" + "-> " + rooms_tuple[self.room_id_w].name: <40}") + "\n"
         
-        str = str + (f"{' ': <30}{'z -> back ': <40}") + "\n"
-        str = str + (f"{' ': <30}{'i -> inventory ': <40}") + "\n"
-        str = str + (f"{' ': <30}{'p -> break': <40}") + "\n"
-        str = str + ("Where do you want to go? ")
-        return str
+        print_str = print_str + (f"{' ': <30}{"\033[1;32;40m" + 'z ' "\033[0m" + "-> back": <40}") + "\n"
+        print_str = print_str + (f"{' ': <30}{"\033[1;32;40m" + 'i ' "\033[0m" + "-> inventory": <40}") + "\n"
+        print_str = print_str + (f"{' ': <30}{"\033[1;32;40m" + 'p ' "\033[0m" + "-> break": <40}") + "\n"
+        print_str = print_str + ("Where do you want to go? ")
+        return print_str
