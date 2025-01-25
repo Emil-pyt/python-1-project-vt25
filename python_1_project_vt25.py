@@ -1,6 +1,8 @@
 
 from room import Room
 from random import randint, random
+import os
+inventory = []
 
 def print_file(fn):
     f= open(fn,'r')
@@ -26,26 +28,32 @@ def rand_Print():
     print("\n-" + str + "\n") 
  
 
-##############################################
-# initialization
-# create room objects and add them to the "rooms" tuple
-# also add item to the rooms
-#
-##############################################
+def clear_screen():  
+    if os.name == 'nt': 
+        _ = os.system('cls')  # For Windows
+    else:
+        _ = os.system('clear') # For macOS and Linux
+
+'''
+initialization
+creates room objects and add them to the "rooms" tuple
+also adds item to the rooms
+'''
+
 r0 = Room(name = "Pantry", room_id_n = 1)
 r1 = Room(name = "Kitchen", room_id_n = 5, room_id_s = 0, room_id_e=2, room_id_w=3)
-r1.add_item_list("Hammer")
-r1.add_item_list("Broom")
+r1.add_into_item_list("Hammer")
+r1.add_into_item_list("Broom")
 r2 = Room(name = "Bedroom", room_id_n = 4, room_id_w = 1)
-r2.add_item_list("Iron sword")
+r2.add_into_item_list("Iron sword")
 r3 = Room(name = "Main Living room", room_id_n = 6, room_id_w = 1)
-r3.add_item_list("Rope")
-r3.add_item_list("Paper")
-r3.add_item_list("Pen")
+r3.add_into_item_list("Rope")
+r3.add_into_item_list("Paper")
+r3.add_into_item_list("Pen")
 r4 = Room(name = "Basement", room_id_s = 2)
-r4.add_item_list("Iron")
-r4.add_item_list("Iron")
-r4.add_item_list("Iron")
+r4.add_into_item_list("Iron")
+r4.add_into_item_list("Iron")
+r4.add_into_item_list("Iron")
 r5 = Room(name = "Second Living room", room_id_e = 6, room_id_s = 1)
 r6 = Room(name = "Hallway", room_id_w = 5, room_id_s = 3)
 rooms = (r0, r1, r2, r3, r4, r5, r6)
@@ -62,12 +70,16 @@ print("Woah! You have just woken up. The room you're in is dark.")
 print("You try to get out but the door is locked, try to find something in the room to smash the door.") 
 
 while 1:   
-    usrInput=input(current_room.generate_input_str(rooms))
+    usrInput=input(current_room.generate_room_str(rooms))
     match usrInput:
+        case "0"|"1"|"2"|"3":
+            if int(usrInput) < len(current_room.item_list):  #if user pressed 0 make sure there are at least 1 item in the list
+                inventory.append( current_room.get_from_item_list(int(usrInput)) )
+            else:
+                rand_Print()
         case "a":
             if current_room.room_id_w  != -1:
                 last_room = current_room
-                current_room = rooms[current_room.room_id_w]
             else: 
                 rand_Print()
         case "w":
@@ -91,12 +103,13 @@ while 1:
         case "z": # going back
             (current_room, last_room) = (last_room, current_room) #instead of using a tmp variable
         case "i":
-            ...
+            print (inventory)
         case "p":
             exit()
         case _:
             rand_Print()
-
+    clear_screen()
+    print_file('banner.txt')
 
 
 '''

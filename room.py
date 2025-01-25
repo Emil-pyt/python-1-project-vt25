@@ -1,6 +1,10 @@
 
 #Todo: validate id and name
 # comment methods and functions
+from logging import debug
+
+
+
 class Room:
     num_instances = 0
 
@@ -17,21 +21,30 @@ class Room:
         self.riddle = riddle
         self.item_list = []
 
-    def add_item_list(self, item_name):
+    def add_into_item_list(self, item_name):
         self.item_list.append(item_name)
-        
-        
+
+    def get_from_item_list(self, item_index):
+        ret_val = ""
+        if item_index < len(self.item_list):
+            debug("popping index " + str(item_index) + " (" + self.item_list[item_index] + ")")
+            ret_val = self.item_list.pop(item_index)
+        else:
+            ret_val = "Error: item_list index out of bound"
+        return ret_val
+
     
-    def generate_input_str(self, rooms_tuple):
+    def generate_room_str(self, rooms_tuple):
 
         print_str = "You are now in the " + "\033[1;36;40m" + self.name + "\033[0m" + "\n"  #name of room in bright green
         if len(self.item_list) != 0:
-            print_str = print_str + "Press a number of wich item you want to pick up: \n" #print all items if any            
+            print_str = print_str + "These items can be picked up here by entering corresponding number: \n" 
             item_str = ""
             for index, item in enumerate(self.item_list):
                 item_str = item_str + str(index) +". "+ str(item) + " "
             print_str = print_str + item_str + "\n"   
             #str = str + ', '.join(self.item_list) + "\n"
+
         print_str = print_str + "These are your options here: " + "\n"   
         if self.room_id_n != -1:
             print_str = print_str + (f"{' ': <30}{"\033[1;32;40m" + 'w' "\033[0m" +" -> " + rooms_tuple[self.room_id_n].name: <40}") + "\n" #prints the button cmds and highlights the key green
@@ -45,5 +58,6 @@ class Room:
         print_str = print_str + (f"{' ': <30}{"\033[1;32;40m" + 'z ' "\033[0m" + "-> back": <40}") + "\n"
         print_str = print_str + (f"{' ': <30}{"\033[1;32;40m" + 'i ' "\033[0m" + "-> inventory": <40}") + "\n"
         print_str = print_str + (f"{' ': <30}{"\033[1;32;40m" + 'p ' "\033[0m" + "-> break": <40}") + "\n"
-        print_str = print_str + ("Where do you want to go? ")
+        print_str = print_str + ("Where do you want to go? ")     
         return print_str
+        
