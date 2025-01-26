@@ -1,9 +1,10 @@
 
 #Todo: validate id and name
 # comment methods and functions
+# lista. expend ny funktion?
+# print stars, avrunda till näörsta heltal
+# check if inventory and correct list is the same to go out
 from logging import debug
-
-
 
 class Room:
     num_instances = 0
@@ -12,10 +13,10 @@ class Room:
         self.id = type(self).num_instances #auto assign self.id
         type(self).num_instances += 1 #increment class attribute num_instances
         self.name = name
-        self.room_id_s = room_id_s #id of room south of this room
-        self.room_id_n = room_id_n #id of room north of this room
-        self.room_id_e = room_id_e #id of room east of this room
-        self.room_id_w = room_id_w #id of room west of this room
+        self.room_id_s = room_id_s #id of room south of this room, key s
+        self.room_id_n = room_id_n #id of room north of this room, key w
+        self.room_id_e = room_id_e #id of room east of this room, key d
+        self.room_id_w = room_id_w #id of room west of this room, key a
         self.room_txt = room_txt 
         self.item = item
         self.riddle = riddle
@@ -23,6 +24,25 @@ class Room:
 
     def add_into_item_list(self, item_name):
         self.item_list.append(item_name)
+
+    def add_item_list(self, list_to_add):
+        self.item_list.extend(list_to_add)
+
+    # returns room id from usrinput_key: w, a, d, s
+    def get_room_id(self, direction):
+        return_value = -1
+        match direction:
+            case "a":
+                return_value = self.room_id_w
+            case "w":
+                return_value = self.room_id_n
+            case "d":
+                return_value = self.room_id_e
+            case "s":
+                return_value = self.room_id_s
+        return return_value
+                
+   
 
     def get_from_item_list(self, item_index):
         ret_val = ""
@@ -35,7 +55,6 @@ class Room:
 
     
     def generate_room_str(self, rooms_tuple):
-
         print_str = "You are now in the " + "\033[1;36;40m" + self.name + "\033[0m" + "\n"  #name of room in bright green
         if len(self.item_list) != 0:
             print_str = print_str + "These items can be picked up here by entering corresponding number: \n" 
