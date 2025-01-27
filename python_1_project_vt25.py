@@ -1,38 +1,27 @@
+################################################
+# Main function that creates objects from the room class
+# and then let the player go to different rooms.
+################################################
 
 from room import Room
-from random import randint, random
 import os
 import time
+from random import randint, random
 
 MAX_HP_CHARACTERS = 20 #number of printed stars when full hp
 MAX_HP_SECONDS = 120 # seconds corresponding to MAX_HP_CHARACTERS
 MAX_NR_SMOOTHIES = 4
 HP_BOOSTER = "Health smoothie"
 SMOOTHIE_EXTRA_SEC = 20
+REQUIRED_LIST = ["Alarm code", "Bread", "Torch"]
+
 
 def print_file(fn):
     f= open(fn,'r')
     print(''.join([line for line in f]))
 
 
-def rand_Print():
-    x = randint(1,6)
-    match x:
-        case 1:
-            str = "The command does not exist, try again" 
-        case 2:
-            str = "Oops wrong button, better luck next time"
-        case 3: 
-            str = "Are you going to walk through a wall? Try a new button" 
-        case 4: 
-            str =  "Great job pressing the wrong button. Try again"
-        case 5: 
-            str =  "That doesn't seem right, maybe check which button you pressed"
-        case 6:
-            str =  "You didn't read? Did you?"
-        case 7:
-            str = "Oh snap! Wrong button"
-    print("\n-" + str + "\n") 
+
  
 def calc_hp( nr_of_chars, nr_of_sec, start_time_p, smoothie_time_p):
     elapsed_time = time.perf_counter() - start_time_p - smoothie_time_p #might get negative but it´s okay if many smoothies taken early
@@ -72,22 +61,21 @@ r5.add_item_list(["Hammer"])
 r6 = Room(name = "Hallway", room_id_w = 5, room_id_s = 3, room_id_n = 7)
 r7 = Room(name = "Garden")
 rooms_in_house = (r0, r1, r2, r3, r4, r5, r6, r7)
+
 smoothie_time = 0
 current_room = rooms_in_house[0] #holds which object in the tuple that is in focus
 last_room = current_room #to be able to go back
 inventory = []
 print_file('banner_zork.txt')
 
-print("Your goal is to collect material in the different rooms to fight the giant that is blocking the door so you can't escape. Good luck!")
-print("To walk you use the commands:    W - South, A - East, D - West, S - back") 
-
-print("Woah! You have just woken up. The room you're in is dark.")
-print("You try to get out but the door is locked, try to find something in the room to smash the door.") 
+print("Your goal is to collect material in the different rooms to escape the house you are locked inside. Good luck!")
+print("To walk you use the commands:    W - North, A - West, D - East, S - South") 
 
 start_time = time.perf_counter()
+print_err_msg = False
 while 1:
-    usrInput=input(current_room.generate_room_str(rooms_in_house))
-
+    usrInput=input(current_room.generate_room_str(rooms_in_house, print_err_msg, inventory, REQUIRED_LIST))
+    print_err_msg = False
     match usrInput:
         case "0"|"1"|"2"|"3":
             if int(usrInput) < len(current_room.item_list):  #if user pressed 0 make sure there are at least 1 item in the list
@@ -96,24 +84,22 @@ while 1:
                     inventory.pop( inventory.index( HP_BOOSTER ) ) 
                     smoothie_time += SMOOTHIE_EXTRA_SEC
             else:
-                rand_Print()
+                print_err_msg = True
         case "a"|"d"|"w"|"s":
             new_room_id = current_room.get_room_id(usrInput)
             if new_room_id  != -1:
                 last_room = current_room
                 current_room = rooms_in_house[new_room_id]
             else: 
-                rand_Print()
-
+                print_err_msg = True
         case "z": # going back
             (current_room, last_room) = (last_room, current_room) #instead of using a tmp variable
-        case "i":
-            print (inventory)
         case "p":
             exit()
         case _:
-            rand_Print()
-    clear_screen()
+            print_err_msg = True 
+    clear_screen() 
+    
     
     hp = calc_hp(MAX_HP_CHARACTERS, MAX_HP_SECONDS, start_time, smoothie_time)
     if hp >= 0:
@@ -128,9 +114,22 @@ while 1:
     if last_room.id == 1 and nr_smoothies > 0 and r1.item_list.count(HP_BOOSTER) == 0:
         r1.add_into_item_list(HP_BOOSTER)
         nr_smoothies -= 1
-        
-        
-'''
+        #when going into garden room check if we have the correct inventory to win the game otherwise go back to last room and flush inventory
+    if current_room == rooms_in_house[-1]: 
+        if inventory == REQUIRED_LIST:
+                clear_screen()
+                print_file('banner_won.txt')
+                exit()
+        else:
+            print("\033[1;93;40m" + "Not correct items in inventory. You have lost all your inventories and you were pushed back into " + rooms_in_house[-2].name  + "\033[0m" + "\n")
+            #put requierd items into rooms so the usr gets a second chance
+            for item in inventory:
+                room_rand_number = randint(0, len(rooms_in_house)-2) #-2 since we dont want to place items in last room(garden)
+                rooms_in_house[room_rand_number].add_into_item_list(item)  
+            inventory = []
+            current_room = last_room #forces the usr back into the house
+
+'''             
    
         #riddle in room 3
         print("You have found a paper behind the door. It seems like it's a riddle!? You take up the paper and read the riddle")
