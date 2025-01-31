@@ -15,25 +15,26 @@ COLOR_WRN = "\033[1;93;40m"
 class Room:
     num_instances = 0
 
-    def __init__(self, name, room_id_s = -1, room_id_n = -1, room_id_e = -1, room_id_w = -1, room_txt = -1, item = -1, riddle = -1):
+    def __init__(self, name, room_id_s = -1, room_id_n = -1, room_id_e = -1, room_id_w = -1, riddle = -1):
         self.id = type(self).num_instances #auto assign self.id
         type(self).num_instances += 1 #increment class attribute num_instances
         self.name = name
         self.room_id_s = room_id_s #id of room south of this room, key s
         self.room_id_n = room_id_n #id of room north of this room, key w
         self.room_id_e = room_id_e #id of room east of this room, key d
-        self.room_id_w = room_id_w #id of room west of this room, key a
-        self.room_txt = room_txt 
-        self.item = item
+        self.room_id_w = room_id_w #id of room west of this room, key a      
         self.riddle = riddle
         self.item_list = []
 
+    # adds a item in a room
     def add_into_item_list(self, item_name):
         self.item_list.append(item_name)
 
+    # adds a item list in a room
     def add_item_list(self, list_to_add):
         self.item_list.extend(list_to_add)
 
+    # prints random printouts for wrong key
     def build_rand_err_msg(self):
         x = randint(1,7)
         ret_str = ""
@@ -69,7 +70,7 @@ class Room:
         return return_value
                 
    
-
+    # move item from room to usr inventory
     def get_from_item_list(self, item_index):
         ret_val = ""
         if item_index < len(self.item_list):
@@ -79,7 +80,7 @@ class Room:
             ret_val = "Error: item_list index out of bound"
         return ret_val
 
-    
+    # generates room specific text and prints the available commands in the room
     def generate_room_str(self, rooms_tuple, print_rand_msg, inv_p, required_list_p):        
         print_str = "You are now in the " + COLOR_CYAN + self.name + COLOR_NRM + "\n"  #name of room in bright green
         print_str = print_str + "\nThese are the items and order you need to collect to escape: " + str(required_list_p) + "\n"
