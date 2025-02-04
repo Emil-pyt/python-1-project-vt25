@@ -68,7 +68,7 @@ smoothie_time = 0
 current_room = rooms_in_house[0] #holds which object in the tuple that is in focus
 last_room = current_room #to be able to go back
 inventory = []
-print_file('banner_zork.txt')
+print_file('ascii_art/banner_zork.txt')
 
 print("Your goal is to collect material in the different rooms to escape the house you are locked inside. Good luck!")
 print("To walk you use the commands:    W - North, A - West, D - East, S - South") 
@@ -106,10 +106,10 @@ while 1:
     hp = calc_hp(MAX_HP_CHARACTERS, MAX_HP_SECONDS, start_time, smoothie_time)
     # check if game over
     if hp >= 0:
-        print_file('banner_zork.txt')
+        print_file('ascii_art/banner_zork.txt')
         print("Your health is:  " + "*" * hp + "-" * (20-(hp)))
     else:
-        print_file('banner_game_over.txt')
+        print_file('ascii_art/banner_game_over.txt')
         print("You have died...")
         exit()
         
@@ -121,7 +121,7 @@ while 1:
     if current_room == rooms_in_house[-1]: 
         if inventory == REQUIRED_LIST:
                 clear_screen()
-                print_file('banner_won.txt')
+                print_file('ascii_art/banner_won.txt')
                 exit()
         else:
             print("\033[1;93;40m" + "Not correct items in inventory. You have lost all your inventories and you were pushed back into " + rooms_in_house[-2].name  + "\033[0m" + "\n")
